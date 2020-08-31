@@ -1,0 +1,303 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ajka.BL</name>
+    </assembly>
+    <members>
+        <member name="P:Ajka.BL.Models.Base.AuthResponseDto.AccessToken">
+            <summary>
+            Security token.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Base.IndividualVariableDto.KeyName">
+            <summary>
+            Value for searching records.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Base.IndividualVariableDto.ValueString">
+            <summary>
+            Users value in string format.
+            </summary>
+        </member>
+        <member name="T:Ajka.BL.Models.Category.CategoryDto">
+            <summary>
+            Group of goods.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Category.CategoryDto.Description">
+            <summary>
+            Title text.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Category.CategoryDto.IsValid">
+            <summary>
+            Validity of record. When is false, the title is not displayed.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDetailDto.InvoiceNumber">
+            <summary>
+            Serial number of the invoice.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDetailDto.RecipientName">
+            <summary>
+            Recipient's address details.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDetailDto.VariableSymbol">
+            <summary>
+            Variable symbol used in bank payment methods.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDetailDto.PaymentMethod">
+            <summary>
+            How goods will be paid.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDetailDto.ReleaseDate">
+            <summary>
+            Date, when this invoice was created.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDetailDto.DueDate">
+            <summary>
+            The day of the last payment option.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDetailDto.TaxablePerformanceDate">
+            <summary>
+            Date of taxable supply.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDto.InvoiceNumber">
+            <summary>
+            Serial number of the invoice.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDto.RecipientName">
+            <summary>
+            Recipient's address details.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDto.VariableSymbol">
+            <summary>
+            Variable symbol used in bank payment methods.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDto.PaymentMethod">
+            <summary>
+            How goods will be paid.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDto.ReleaseDate">
+            <summary>
+            Date, when this invoice was created.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDto.DueDate">
+            <summary>
+            The day of the last payment option.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceDto.TaxablePerformanceDate">
+            <summary>
+            Date of taxable supply.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceItemDto.InvoiceId">
+            <summary>
+            Link to the invoice table.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceItemDto.OrderNumber">
+            <summary>
+            Position of this line in invoice (ascending from top).
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceItemDto.Description">
+            <summary>
+            Text description of the goods.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceItemDto.PricePerPiece">
+            <summary>
+            Price in CZK for one piece of goods.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Invoice.InvoiceItemDto.Quantity">
+            <summary>
+            Quantity of goods pieces.
+            </summary>
+        </member>
+        <member name="T:Ajka.BL.Models.ItemCard.ItemCardDto">
+            <summary>
+            Preview of goods.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.Headline">
+            <summary>
+            Title of good.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.Description">
+            <summary>
+            Detailed description of good (HTML format).
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.ThumbnailImagePath">
+            <summary>
+            Relative network path to preview image.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.Quantity">
+            <summary>
+            Available quantity.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.Price">
+            <summary>
+            Price for one item of goods in CZK.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.CommodityIdentifier">
+            <summary>
+            Text identification of commodity type, used in import Adler products function.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.IsAdlerProduct">
+            <summary>
+            If true, then this product is imported from Adler web service.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardDto.State">
+            <summary>
+            States of item in selling process.
+            </summary>
+        </member>
+        <member name="T:Ajka.BL.Models.ItemCard.ItemCardImageDto">
+            <summary>
+            Images for item cards.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardImageDto.ColorName">
+            <summary>
+            Description of the color of the goods.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardImageDto.ImagePath">
+            <summary>
+            Relative network path to image.
+            </summary>
+        </member>
+        <member name="T:Ajka.BL.Models.ItemCard.ItemCardSizePriceDto">
+            <summary>
+            Variation of prices for specific sizes od product.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardSizePriceDto.ItemCardId">
+            <summary>
+            Link to the item card table.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardSizePriceDto.SizeName">
+            <summary>
+            Short name for size (identifier).
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.ItemCard.ItemCardSizePriceDto.Price">
+            <summary>
+            Price for one item of goods in CZK.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderBasketDto.Email">
+            <summary>
+            Customer email.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderBasketDto.Note">
+            <summary>
+            Note from customer.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderBasketDto.IsRequestedCopyOfOrder">
+            <summary>
+            If true, copy of order summary is send to customer email.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderBasketItemDto.OrderedQuantity">
+            <summary>
+            Quantity of goods, requested by customer.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderBasketItemDto.ColorName">
+            <summary>
+            Color selected by the customer.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderBasketItemDto.SizeName">
+            <summary>
+            Size selected by the customer.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderBasketItemDto.ImagePath">
+            <summary>
+            Web path to image of requested goods.
+            </summary>
+        </member>
+        <member name="T:Ajka.BL.Models.Order.OrderDto">
+            <summary>
+            Customers order.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderDto.Discount">
+            <summary>
+            Custom discount, ordered by administrator.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderDto.CustomerEmail">
+            <summary>
+            Email of customer, where administrator will send payment details.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.Order.OrderDto.Note">
+            <summary>
+            Note from customer.
+            </summary>
+        </member>
+        <member name="T:Ajka.BL.Models.User.UserDto">
+            <summary>
+            Evidence of users.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.User.UserDto.Name">
+            <summary>
+            Person name.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.User.UserDto.Surname">
+            <summary>
+            Person surname.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.User.UserDto.Email">
+            <summary>
+            Email address.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.User.UserDto.Password">
+            <summary>
+            Hashed password for login to system.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.User.UserDto.IsAdministrator">
+            <summary>
+            If true, the user has system administration rights.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Models.User.UserDto.IsValid">
+            <summary>
+            Validity of record.
+            </summary>
+        </member>
+    </members>
+</doc>

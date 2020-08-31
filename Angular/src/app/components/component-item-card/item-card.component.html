@@ -1,0 +1,132 @@
+<div class="container item-card-wrapper">
+    <h2>{{ itemCard?.headline }}</h2>
+    <alert id="alert-item-card"></alert>
+    <div *ngIf="!isUserAdministrator">
+        <ngx-loading-bar color="#C291D2"></ngx-loading-bar>
+
+        <form #itemCardFormCheck="ngForm" (ngSubmit)="onSubmitItemCardBasket()">
+            <div class="row">
+                <div *ngIf="itemCardImageMainUrl != undefined" class="col-12 col-sm-6">
+                    <img [lazyLoad]="itemCardImageMainUrl" [defaultImage]="itemCardImageMainUrl" alt="Fotografie"
+                        class="img-fluid">
+                </div>
+                <div class="col-12 col-sm-6">
+                    <div class="row" *ngIf="itemCard?.quantity">
+                        <div [innerHTML]="itemCard?.description" class="col-12"></div>
+                        <a *ngIf="itemCardProdictSizeOverviewUrl" [attr.href]="itemCardProdictSizeOverviewUrl"
+                            class="btn btn-outline-info text-nowrap mt-2 col-8" role="button" target="_blank">Rozměry produktu</a>
+                        <hr class="col-10" />
+                        <div class="col-12 col-sm-6 mt-2">
+                            Dostupné množství: <span class="item-card-quantity">{{ itemCard?.quantity }}</span> ks
+                        </div>
+                        <div class="col-12 col-sm-6 mt-2" *ngIf="itemCard?.isAdlerProduct">
+                            Barva: <span class="item-card-quantity">{{ chosenColor }}</span>
+                        </div>
+                        <div class="col-12 col-sm-6 mt-2" *ngIf="itemCard?.isAdlerProduct && this.chosenSizePrice">
+                            <label>Velikost: </label>
+                            <select class="ml-1" (change)="handleSelectChangeHandler($event)">
+                                <option *ngFor="let sizePriceRecord of itemCardSizePrices" [ngValue]="sizePriceRecord">{{ sizePriceRecord.sizeName }}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="col-12 col-sm-6 mt-2">
+                            Cena: <span class="item-card-price">{{ itemCard?.price | number }},-</span>
+                        </div>
+                        <div class="col-12">
+                            <div class="row">
+                                <div class="col-4 mt-2">
+                                    <input type="number" class="form-control item-card-requested-quantity"
+                                        name="requestedQuantity" [(ngModel)]="requestedQuantity">
+                                </div>
+                                <div class="col-6 mt-2">
+                                    <button type="button" class="btn btn-primary text-nowrap" type="submit">Přidat do
+                                        košíku</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <div *ngIf="itemCardImages != undefined && itemCardImages.length > 0" class="container">
+            <div class="row">
+                <div *ngFor="let itemCardImage of itemCardImages">
+                    <div class="col-4 col-sm-2 mt-2">
+                        <div *ngIf="checkImagePath(itemCardImage.imagePath)">
+                            <img [lazyLoad]="itemCardImageUrl" [defaultImage]="itemCardImageDefaultUrl"
+                                (click)="setMainImagePath(itemCardImage.imagePath, itemCardImage.colorName)"
+                                alt="Photo-{{ itemCardImage.id }}" class="image-wrap image-clickable">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div *ngIf="isUserAdministrator">
+        <form #itemCardFormCheck="ngForm" (ngSubmit)="onSubmitItemCard()">
+            <div class="form-group">
+                <label for="itemCardThumbnailImageFile">Obrázek náhledu</label>
+                <input id="itemCardThumbnailImageFile" type="file" class="form-control" name="thumbnailImageFakePath"
+                    [(ngModel)]="itemCard.thumbnailImageFakePath"
+                    (change)="handleThumbnailImageFileInput($event.target.files)">
+                <div class="mt-2">
+                    <button type="button" class="btn btn-outline-info"
+                        (click)="createThumbnailFromExistingImage()">Vytvořit z fotografií</button>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="itemCardImageFile">Fotografie</label>
+                <input id="itemCardImageFile" type="file" class="form-control" name="imageFakePath" multiple
+                    [(ngModel)]="itemCard.imageFakePath" (change)="handleImageFileInput($event.target.files)">
+            </div>
+            <div class="form-group">
+                <label for="itemCardHeadline">Nadpis</label>
+                <input id="itemCardHeadline" type="text" class="form-control" name="headline"
+                    [(ngModel)]="itemCard.headline" #headline="ngModel" required>
+            </div>
+            <div [hidden]="headline.valid || headline.pristine" class="alert alert-danger">
+                Nadpis je povinná položka
+            </div>
+            <div class="form-group">
+                <label for="itemCardQuantity">Množství</label>
+                <input id="itemCardQuantity" type="number" class="form-control" name="quantity"
+                    [(ngModel)]="itemCard.quantity" required>
+            </div>
+            <div class="form-group">
+                <label for="itemCardDescription">Popis</label>
+                <quill-editor id="itemCardDescription" name="description" [(ngModel)]="itemCard.description">
+                </quill-editor>
+            </div>
+            <div class="form-group">
+                <label for="itemCardPrice">Cena</label>
+                <input id="itemCardPrice" type="number" class="form-control" name="price" [(ngModel)]="itemCard.price"
+                    required>
+            </div>
+            <div class="form-group">
+                <label for="itemCardState" class="mr-2">Stav karty:</label>
+                <select id="itemCardState" [(ngModel)]="itemCard.state" name="state">
+                    <option *ngFor="let stateItem of itemCardStates" [ngValue]="stateItem.key">
+                        {{ stateItem.description }}</option>
+                </select>
+            </div>
+            <div class="mt-2">
+                <button type="button" class="btn btn-primary" type="submit"
+                    [disabled]="!itemCardFormCheck.valid">Uložit</button>
+            </div>
+        </form>
+        <div class="container">
+            <div class="row mt-3">
+                <div *ngFor="let itemCardImage of itemCardImages">
+                    <div class="col-4 col-sm-2">
+                        <div *ngIf="!itemCard.isAdlerProduct" class="image-delete-button"
+                            (click)="deleteImage(itemCardImage.id)">X</div>
+                        <div *ngIf="checkImagePath(itemCardImage.imagePath)">
+                            <img [lazyLoad]="itemCardImageUrl" [defaultImage]="itemCardImageDefaultUrl"
+                                alt="Photo-{{ itemCardImage.id }}" class="image-wrap">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

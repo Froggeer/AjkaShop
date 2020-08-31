@@ -1,0 +1,43 @@
+<div class="row">
+    <span *ngFor="let cardRecord of itemCards">
+        <div class="card content-item-card-body" (click)="detail(cardRecord.id)" data-toggle="modal"
+            data-target="#itemCardDetailModal" [style.background-color]="getBackgroundColorByState(cardRecord.state)">
+            <div class="card-body">
+                <div class="card-title headline">
+                    {{ cardRecord.headline }}
+                </div>
+            </div>
+            <div *ngIf="checkImagePath(cardRecord.thumbnailImagePath)" class="thumbnail-image-wrap pl-1">
+                <img [lazyLoad]="itemCardImageUrl" [defaultImage]="itemCardImageDefaultUrl"
+                    alt="{{ cardRecord.headline }}" class="thumbnail-image">
+            </div>
+        </div>
+    </span>
+    <span *ngIf="isUserAdministrator">
+        <div class="content-item-card-body" (click)="detail(0)" data-toggle="modal" data-target="#itemCardDetailModal">
+            <div class="new-item">+</div>
+        </div>
+    </span>
+</div>
+<div *ngIf="isUserAdministrator" class="legend-body">
+    <div class="legend-headline">Legenda:</div>
+    <div>V nabídce</div>
+    <div [style.background-color]="getBackgroundColorByState(2)">Zboží je prodáno</div>
+    <div [style.background-color]="getBackgroundColorByState(3)">Dočasně vyřazeno z prodeje</div>
+    <div [style.background-color]="getBackgroundColorByState(0)">Chybný stav!</div>
+</div>
+
+<div class="modal fade p-2" id="itemCardDetailModal" tabindex="-1" role="dialog"
+    aria-labelledby="itemCardDetailModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" #itemCardCloseButton>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <app-item-card #itemCardComponent (isItemCardChangedEvent)="catchItemCardChange($event)">
+                </app-item-card>
+            </div>
+        </div>
+    </div>
+</div>

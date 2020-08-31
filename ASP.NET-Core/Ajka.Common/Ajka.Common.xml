@@ -1,0 +1,68 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ajka.Common</name>
+    </assembly>
+    <members>
+        <member name="T:Ajka.Common.Enums.InvoiceEnums.InvoicePaymentMethod">
+            <summary>
+            Payment methods for payment of goods.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.InvoiceEnums.InvoicePaymentMethod.BankTransfer">
+            <summary>
+            Payment is made by bank transfer.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.InvoiceEnums.InvoicePaymentMethod.Cash">
+            <summary>
+            Payment is made by cash in case of personal delivery.
+            </summary>
+        </member>
+        <member name="T:Ajka.Common.Enums.ItemCardEnums.ItemCardState">
+            <summary>
+            Goods sales record statuses.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.ItemCardEnums.ItemCardState.ForSale">
+            <summary>
+            The goods is available for sale to customers.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.ItemCardEnums.ItemCardState.Sold">
+            <summary>
+            The goods is sold and will be never offered for sale again.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.ItemCardEnums.ItemCardState.Inactive">
+            <summary>
+            Item is hidden from eshop offer, but can be anytime returned to sale.
+            </summary>
+        </member>
+        <member name="T:Ajka.Common.Enums.OrderEnums.OrderState">
+            <summary>
+            Goods sales record statuses.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.OrderEnums.OrderState.Created">
+            <summary>
+            Order is just created by customer and waits for administrator to process.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.OrderEnums.OrderState.WaitingForPayment">
+            <summary>
+            The customer has received payment instructions and is awaiting payment.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.OrderEnums.OrderState.Closed">
+            <summary>
+            Order is successfully completed, bought goods has removed from offer.
+            </summary>
+        </member>
+        <member name="F:Ajka.Common.Enums.OrderEnums.OrderState.Cancellation">
+            <summary>
+            Order is cancelled and nothing change.
+            </summary>
+        </member>
+    </members>
+</doc>

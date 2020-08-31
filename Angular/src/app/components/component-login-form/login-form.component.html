@@ -1,0 +1,27 @@
+<div class="container">
+    <div>
+        <alert id="alert-login"></alert>
+    </div>
+    <form #loginForm="ngForm" (ngSubmit)="onSubmit()">
+        <div class="form-group">
+            <label for="email">Email</label>
+            <input type="text" class="form-control" id="email" [(ngModel)]="model.email" name="email" #email="ngModel" required autofocus>
+        </div>
+        <div [hidden]="email.valid || email.pristine" class="alert alert-danger">
+            Email je povinná položka
+        </div>
+
+        <div class="form-group">
+            <label for="password">Heslo</label>
+            <input type="password" class="form-control" id="password" [(ngModel)]="model.password" name="password" #password="ngModel" 
+            (keyup.enter)="login()" required>
+        </div>
+        <div [hidden]="password.valid || password.pristine" class="alert alert-danger">
+            Heslo musí být zadáno
+        </div>
+
+        <div>
+            <button type="button" class="btn btn-primary" (click)="login()" [disabled]="!loginForm.form.valid">Přihlásit</button>
+        </div>
+    </form>
+</div>

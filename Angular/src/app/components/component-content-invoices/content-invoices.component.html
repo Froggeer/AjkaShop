@@ -1,0 +1,176 @@
+<div class="container content-body-wrap">
+    <!-- Invoice header overview  -->
+
+    <div *ngIf="screenIdentifierActiveState == screenIdentifiers.invoices">
+        <h3 class="mt-3">Přehled faktur</h3>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col">#</th>
+                    <th scope="col">Číslo faktury</th>
+                    <th scope="col">Příjemce</th>
+                    <th scope="col">Datum vystavení</th>
+                    <th scope="col" colspan="3" class="text-center">
+                        <button type="button" class="btn btn-success"
+                            (click)="setScreenIdentifierState(screenIdentifiers.invoiceForm)">Nový záznam</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let invoiceRecord of invoices">
+                    <td>{{ invoiceRecord.id }}</td>
+                    <td>{{ invoiceRecord.invoiceNumber }}/{{ invoiceRecord.releaseDate | date:'yyyy' }}</td>
+                    <td>{{ invoiceRecord.recipientName }}</td>
+                    <td>{{ invoiceRecord.releaseDate | date:'d.M.yyyy' }}</td>
+                    <td>
+                        <span class="base-button-delete-update"
+                            (click)="setScreenIdentifierState(screenIdentifiers.invoiceDetail, invoiceRecord.id)">
+                            <fa-icon [icon]="['fas','search']"></fa-icon>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="base-button-delete-update"
+                            (click)="setScreenIdentifierState(screenIdentifiers.invoiceForm, invoiceRecord.id)">
+                            <fa-icon [icon]="['fas','edit']"></fa-icon>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="base-button-delete-update" mwlConfirmationPopover [popoverTitle]="popoverTitle"
+                            [popoverMessage]="popoverMessage" placement="left"
+                            (confirm)="deleteInvoice(invoiceRecord.id)">
+                            <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Invoice form  -->
+
+    <div *ngIf="screenIdentifierActiveState == screenIdentifiers.invoiceForm">
+        <h3 class="mt-3 ml-2">Založení/úprava faktury</h3>
+        <div class="m-1 p-3 my-3 content-box-shadow">
+            <form #invoiceFormCheck="ngForm" (ngSubmit)="onSubmitInvoice()">
+                <input type="hidden" name="id" [(ngModel)]="invoiceForm.id">
+                <div class="form-group">
+                    <label for="invoiceNumber">Číslo faktury</label>
+                    <input id="invoiceNumber" type="number" class="form-control" name="invoiceNumber"
+                        [(ngModel)]="invoiceForm.invoiceNumber" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipientName">Jméno příjemce</label>
+                    <input id="recipientName" type="text" class="form-control" name="recipientName"
+                        [(ngModel)]="invoiceForm.recipientName" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipientStreet">Ulice</label>
+                    <input id="recipientStreet" type="text" class="form-control" name="recipientStreet"
+                        [(ngModel)]="invoiceForm.recipientStreet" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipientCity">Město</label>
+                    <input id="recipientCity" type="text" class="form-control" name="recipientCity"
+                        [(ngModel)]="invoiceForm.recipientCity" required>
+                </div>
+                <div class="form-group">
+                    <label for="recipientZipCode">PSČ</label>
+                    <input id="recipientZipCode" type="text" class="form-control" name="recipientZipCode"
+                        [(ngModel)]="invoiceForm.recipientZipCode" required>
+                </div>
+                <div class="form-group">
+                    <label for="variableSymbol">Variabilní symbol</label>
+                    <input id="variableSymbol" type="text" class="form-control" name="variableSymbol"
+                        [(ngModel)]="invoiceForm.variableSymbol">
+                </div>
+                <div class="form-group">
+                    <label for="paymentMethod" class="mr-2">Platební metoda:</label>
+                    <select id="paymentMethod" [(ngModel)]="invoiceForm.paymentMethod" name="paymentMethod">
+                        <option *ngFor="let paymentMethod of invoicePaymentMethods" [ngValue]="paymentMethod.key">
+                            {{ paymentMethod.description }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="releaseDate">Datum vystavení</label>
+                    <input id="releaseDate" type="date" class="form-control" name="releaseDate"
+                        [(ngModel)]="invoiceForm.releaseDate" [ngModel]="invoiceForm.releaseDate | date:'yyyy-MM-dd'"
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="dueDate">Datum splatnosti</label>
+                    <input id="dueDate" type="date" class="form-control" name="dueDate"
+                        [(ngModel)]="invoiceForm.dueDate" [ngModel]="invoiceForm.dueDate | date:'yyyy-MM-dd'" required>
+                </div>
+                <div class="form-group">
+                    <label for="taxablePerformanceDate">Datum zdanitelného plnění</label>
+                    <input id="taxablePerformanceDate" type="date" class="form-control" name="taxablePerformanceDate"
+                        [(ngModel)]="invoiceForm.taxablePerformanceDate"
+                        [ngModel]="invoiceForm.taxablePerformanceDate | date:'yyyy-MM-dd'" required>
+                </div>
+
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary mr-1" type="submit"
+                        [disabled]="!invoiceFormCheck.valid">Uložit</button>
+                    <button type="button" class="btn btn-secondary"
+                        (click)="setScreenIdentifierState(screenIdentifiers.invoices)">Zpět</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Invoice detail  -->
+
+    <div *ngIf="screenIdentifierActiveState == screenIdentifiers.invoiceDetail">
+        <h3 class="mt-3 ml-2">Detail faktury</h3>
+        <div *ngIf="invoiceForm" class="m-1 p-3 mt-3 content-box-shadow invoice-table-detail">
+            <table class="table-borderless">
+                <tbody>
+                    <tr>
+                        <td>Číslo faktury:</td>
+                        <td>{{ invoiceForm.invoiceNumber }}/{{ invoiceForm.releaseDate | date:'yyyy' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Jméno příjemce:</td>
+                        <td>{{ invoiceForm.recipientName }}</td>
+                    </tr>
+                    <tr>
+                        <td>Ulice:</td>
+                        <td>{{ invoiceForm.recipientStreet }}</td>
+                    </tr>
+                    <tr>
+                        <td>Město:</td>
+                        <td>{{ invoiceForm.recipientCity }}</td>
+                    </tr>
+                    <tr>
+                        <td>PSČ:</td>
+                        <td>{{ invoiceForm.recipientZipCode }}</td>
+                    </tr>
+                    <tr>
+                        <td>Platební metoda:</td>
+                        <td>{{ invoiceForm.paymentMethodDescription }}</td>
+                    </tr>
+                    <tr>
+                        <td>Datum vystavení:</td>
+                        <td>{{ invoiceForm.releaseDate | date:'d. M. yyyy' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Datum splatnosti:</td>
+                        <td>{{ invoiceForm.dueDate | date:'d. M. yyyy' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Datum zdanitelného plnění:</td>
+                        <td>{{ invoiceForm.taxablePerformanceDate | date:'d. M. yyyy' }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="mt-3">
+                <a [attr.href]="invoicePdfUrl" class="btn btn-primary mr-2" role="button">Tisk faktury</a>
+                <button type="button" class="btn btn-secondary"
+                    (click)="setScreenIdentifierState(screenIdentifiers.invoices)">Zpět</button>
+            </div>
+        </div>
+        <hr class="col-10 mt-3" />
+        <app-invoice-item class="mt-3" [invoice]="invoiceForm" [invoicePaymentMethods]="invoicePaymentMethods">
+        </app-invoice-item>
+    </div>
+</div>

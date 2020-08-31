@@ -1,0 +1,67 @@
+﻿@using RazorLight
+@model Ajka.BL.Models.Order.OrderEmailSummaryModel
+
+@{
+    var sumQuantity = 0;
+    decimal sumPrice = 0;
+}
+
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+    <meta charset="utf-8" />
+</head>
+<body>
+    <div>Pořadové číslo objednávky: <span>@Model.OrderNumber</span></div>
+    <div style="margin-top: 5px;">Kontaktní emailová adresa: <span style="font-weight: bold;">@Model.Email</span></div>
+
+    <table style="margin-top: 10px; border: 2px solid black; border-spacing: 0px; border-collapse: separate;">
+        <thead>
+            <tr style="background-color: lightskyblue;">
+                <th style="border: 1px solid black; padding: 10px;"></th>
+                <th style="border: 1px solid black; padding: 10px;">Popis</th>
+                <th style="border: 1px solid black; padding: 10px;">Informace o produktu</th>
+                <th style="border: 1px solid black; padding: 10px;">Počet kusů</th>
+                <th style="border: 1px solid black; padding: 10px;">Cena/kus</th>
+                <th style="border: 1px solid black; padding: 10px;">Cena celkem</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var basketItemCard in Model.OrderBasketItems)
+            {
+                var price = (int)(basketItemCard.ItemCardSizePrice != null ? basketItemCard.ItemCardSizePrice.Price : basketItemCard.ItemCard.Price);
+                sumQuantity += basketItemCard.OrderedQuantity;
+                sumPrice += price * basketItemCard.OrderedQuantity;
+                <tr>
+                    <td style="border: 1px solid black; padding: 10px; text-align: left;">
+                        @if (!string.IsNullOrWhiteSpace(basketItemCard.ImagePath))
+                        {
+                            <img src="@basketItemCard.ImagePath" style="width: 50px;" />
+                        }
+                    </td>
+                    <td style="border: 1px solid black; padding: 10px; text-align: left;">@basketItemCard.ItemCard?.Headline</td>
+                    <td style="border: 1px solid black; padding: 10px; text-align: left;">
+                        @if (basketItemCard.ItemCard.IsAdlerProduct)
+                        {
+                            <span>Barva:</span> @basketItemCard.ColorName<span>, Velikost: </span>@basketItemCard.SizeName
+                        }
+                    </td>
+                    <td style="border: 1px solid black; padding: 10px; text-align: left;">@basketItemCard.OrderedQuantity</td>
+                    <td style="border: 1px solid black; padding: 10px; text-align: left;">@price ,-</td>
+                    <td style="border: 1px solid black; padding: 10px; text-align: left;">
+                    @(basketItemCard.OrderedQuantity * price) ,-
+                    </td>
+                </tr>
+            }
+            <tr style="color: white; background-color: black;">
+                <td style="font-weight: bold; padding: 10px; text-align: left;">Celkem</td>
+                <td style="padding: 10px; text-align: left;" colspan="2"></td>
+                <td style="font-weight: bold; padding: 10px; text-align: left;">@sumQuantity</td>
+                <td style="padding: 10px; text-align: left;"></td>
+                <td style="font-weight: bold; padding: 10px; text-align: left;">@sumPrice ,-</td>
+            </tr>
+        </tbody>
+    </table>
+</body>
+</html>

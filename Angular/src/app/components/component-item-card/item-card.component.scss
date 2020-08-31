@@ -1,0 +1,38 @@
+.item-card-wrapper {
+    color: black;
+
+    .image-wrap {
+        width: 150px;
+    }
+
+    .image-clickable {
+        cursor: pointer;
+    }
+
+    .image-delete-button {
+        position: relative;
+        color: red;
+        top: 30px;
+        left: 2px;
+        background-color: white;
+        width: 22px;
+        padding: 2px 5px 2px 5px;
+        font-weight: bold;
+        font-size: 20px;
+        cursor: pointer;
+    }
+
+    .item-card-price {
+        font-size: larger;
+        font-weight: bold;
+        color: red;
+    }
+
+    .item-card-quantity {
+        font-weight: bold;
+    }
+
+    .item-card-requested-quantity {
+        width: 70px;
+    }
+}

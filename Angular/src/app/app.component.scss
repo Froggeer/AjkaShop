@@ -1,0 +1,34 @@
+@import 'src/variables.scss';
+
+$main-page-horizontal-margin: 160px;
+
+.header-top {
+  border-bottom: 1px solid lightgrey;
+}
+
+.header-top-button {
+  min-width: 160px;
+  max-width: 190px;
+}
+
+.main-field-content {
+  @media only screen and (min-width: $media-size-large-desktop) {
+    margin-left: $main-page-horizontal-margin;
+    margin-right: $main-page-horizontal-margin;
+  }
+
+  @media only screen and (min-width: $media-size-medium-desktop) and (max-width: $media-size-medium-desktop-max) {
+    margin-left: $main-page-horizontal-margin / 2;
+    margin-right: $main-page-horizontal-margin / 2;
+  }
+
+  @media only screen and (min-width: $media-size-small-tablet) and (max-width: $media-size-small-tablet-max) {
+    margin-left: $main-page-horizontal-margin / 10;
+    margin-right: $main-page-horizontal-margin / 10;
+  }
+
+  @media only screen and (max-width: $media-size-extra-small-max) {
+    margin-left: $main-page-horizontal-margin / 20;
+    margin-right: $main-page-horizontal-margin / 20;
+  }
+}

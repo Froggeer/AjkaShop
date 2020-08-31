@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+@import 'src/variables.scss';
+
+body {
+  background-color: $main-bgcolor;
+  color: $main-textcolor;
+  font-size: $main-fontsize;
+}
+
+.content-body-wrap {
+  color: black;
+}
+
+.content-box-shadow {
+  @media only screen and (min-width: $media-size-small-tablet) {
+    box-shadow: 0 12px 15px 0 rgba(0, 0, 0, 0.24), 0 17px 50px 0 rgba(0, 0, 0, 0.19);
+    border: 1px solid gray;
+  }
+
+  @media only screen and (max-width: $media-size-extra-small-max) {
+    border: 1px solid grey;
+  }
+}
+
+.base-button-delete-update {
+  cursor: pointer;
+}

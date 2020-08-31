@@ -1,0 +1,44 @@
+$contentItemCardWidth: 150px;
+$contentItemCardHeight: 220px;
+
+.content-item-card-body {
+    width: $contentItemCardWidth;
+    height: $contentItemCardHeight;
+    border: 1px solid grey;
+    margin: 5px;
+    cursor: pointer;
+
+    .headline {
+        font-size: small;
+        font-weight: bold;
+        color: black;
+    }
+
+    .thumbnail-image-wrap {
+        width: $contentItemCardWidth - 10px;
+        height: $contentItemCardWidth - 20px;
+        text-align: center;
+    }
+
+    .thumbnail-image {
+        max-width: $contentItemCardWidth - 10px;
+        max-height: $contentItemCardWidth - 20px;
+    }
+
+    .new-item {
+        font-size: 100px;
+        font-weight: bold;
+        text-align: center;
+        color: lightseagreen;
+    }
+}
+
+.legend-body {
+    max-width: 230px;
+    white-space: nowrap;
+
+    .legend-headline {
+        font-style: italic;
+        font-size: small;
+    }
+}

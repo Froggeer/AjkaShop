@@ -1,0 +1,23 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>Ajka.BL</name>
+    </assembly>
+    <members>
+        <member name="P:Ajka.BL.Queries.User.Dto.UserDto.Name">
+            <summary>
+            Person name.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Queries.User.Dto.UserDto.Surname">
+            <summary>
+            Person surname.
+            </summary>
+        </member>
+        <member name="P:Ajka.BL.Queries.User.Dto.UserDto.IsValid">
+            <summary>
+            Validity of record.
+            </summary>
+        </member>
+    </members>
+</doc>

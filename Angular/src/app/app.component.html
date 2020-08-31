@@ -1,0 +1,109 @@
+<div class="container-fluid">
+    <div class="row header-top justify-content-center">
+        <div class="col-12 col-sm-6 col-md-3">
+            <img src="assets/AjcinObchudekLogo.png" alt="Logo">
+        </div>
+        <div class="col-12 col-sm-6 col-md-4">
+            <div class="input-group mt-3 mb-2">
+                <input type="text" class="form-control" placeholder="Hledat v obchůdku" aria-label="Search">
+                <div class="input-group-append">
+                    <fa-icon [icon]="['fas','search']" flip="horizontal" transform="left-30 down-5"></fa-icon>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4 col-md-2 header-top-button">
+            <span *ngIf="isUserLogged; else showButtonForLogin">
+                <button type="button" class="btn mt-3 mb-2 btn-primary" (click)="logout()">Odhlásit</button>
+            </span>
+            <ng-template #showButtonForLogin>
+                <button type="button" class="btn btn-labeled mt-3 mb-2 btn-outline-info" data-toggle="modal"
+                    data-target="#loginModal">
+                    <span class="btn-label">
+                        <span>
+                            <fa-icon [icon]="['fas','user']"></fa-icon>
+                        </span>
+                    </span>
+                    <span class="ml-2">Přihlášení</span>
+                </button>
+            </ng-template>
+        </div>
+        <div class="col-12 col-sm-4 col-md-2 header-top-button">
+            <button type="button" class="btn btn-labeled mt-3 mb-2 btn-outline-info" (click)="showBasket()">
+                <span class="btn-label">
+                    <span>
+                        <fa-icon [icon]="['fas','shopping-basket']"></fa-icon>
+                    </span>
+                </span>
+                <span class="ml-2">Košík</span>
+            </button>
+        </div>
+    </div>
+</div>
+
+<ngx-loading-bar color="#C291D2"></ngx-loading-bar>
+
+<div>
+    <alert></alert>
+</div>
+
+<div class="container-fluid header-top" *ngIf="isUserAdministrator">
+    <div class="main-field-content">
+        <nav class="navbar navbar-light bg-white">
+            <div class="btn-group">
+                <button class="btn btn-sm btn-primary mr-2" type="button" (click)="showSettings()">
+                    <span class="btn-label mr-2">
+                        <span>
+                            <fa-icon [icon]="['fas','cog']"></fa-icon>
+                        </span>
+                    </span>
+                    <span>Nastavení</span>
+                </button>
+                <button class="btn btn-sm btn-primary mr-2" type="button" (click)="showInvoices()">
+                    <span class="btn-label mr-2">
+                        <span>
+                            <fa-icon [icon]="['fas','file-pdf']"></fa-icon>
+                        </span>
+                    </span>
+                    <span>Faktury</span>
+                </button>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="container-fluid header-top">
+    <div class="main-field-content">
+        <nav class="navbar navbar-light bg-white">
+            <div class="btn-group flex-wrap">
+                <span *ngFor="let element of categories">
+                    <app-category [id]="element.id" [description]="element.description"
+                        (click)="showItemCards(element.id)"></app-category>
+                </span>
+            </div>
+        </nav>
+    </div>
+</div>
+
+<div class="container-fluid">
+    <div class="main-field-content">
+        <div #dynamicContent></div>
+    </div>
+</div>
+
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close" #loginCloseButton>
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <app-login-form (userIsLoggedInEvent)="catchUserLoginState($event)"></app-login-form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<router-outlet></router-outlet>

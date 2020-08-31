@@ -1,0 +1,49 @@
+<form #invoiceItemFormCheck="ngForm" (ngSubmit)="onSubmitInvoiceItem()">
+    <table class="table table-striped m-1">
+        <thead>
+            <tr class="table-primary">
+                <th scope="col">Pořadí</th>
+                <th scope="col">Popis</th>
+                <th scope="col">Cena/kus</th>
+                <th scope="col">Množství</th>
+                <th scope="col" colspan="2" class="text-nowrap">Cena celkem</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let invoiceRecord of invoice.invoiceItems">
+                <td>{{ invoiceRecord.orderNumber }}</td>
+                <td>{{ invoiceRecord.description }}</td>
+                <td>{{ invoiceRecord.pricePerPiece }}</td>
+                <td>{{ invoiceRecord.quantity > 0 ? invoiceRecord.quantity : '' }}</td>
+                <td>{{ (invoiceRecord.quantity > 0 ? invoiceRecord.quantity : 1) * invoiceRecord.pricePerPiece }}</td>
+                <td>
+                    <span class="base-button-delete-update" mwlConfirmationPopover [popoverTitle]="popoverTitle"
+                        [popoverMessage]="popoverMessage" placement="left"
+                        (confirm)="deleteIvoiceItem(invoiceRecord.id)">
+                        <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
+                    </span>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <input type="number" class="form-control" name="orderNumber" [(ngModel)]="invoiceItem.orderNumber">
+                </td>
+                <td>
+                    <input type="text" class="form-control" name="description" [(ngModel)]="invoiceItem.description"
+                        required>
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="pricePerPiece"
+                        [(ngModel)]="invoiceItem.pricePerPiece" required>
+                </td>
+                <td>
+                    <input type="number" class="form-control" name="quantity" [(ngModel)]="invoiceItem.quantity">
+                </td>
+                <td colspan="2">
+                    <button type="button" class="btn btn-primary" type="submit"
+                        [disabled]="!invoiceItemFormCheck.valid">Přidat</button>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</form>
