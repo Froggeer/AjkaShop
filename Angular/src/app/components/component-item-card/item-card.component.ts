@@ -9,6 +9,7 @@ import { ItemCardDto } from 'src/app/shared-dto/item-card-dto.model';
 import { ItemCardImageDto } from 'src/app/shared-dto/item-card-image-dto.model';
 import { FormDropdownDto } from 'src/app/shared-dto/form-dropdown-dto.model';
 import { ItemCardSizePriceDto } from 'src/app/shared-dto/item-card-size-price-dto.model';
+import { GlobalConstants } from 'src/app/common/global-constants';
 
 @Component({
   selector: 'app-item-card',
@@ -23,14 +24,16 @@ export class ItemCardComponent {
 
   public itemCard: ItemCardDto;
   public itemCardImages: ItemCardImageDto[];
-  public itemCardImageMainUrl: string;
+  public itemCardImageSelected: ItemCardImageDto;
   public itemCardImageUrl: string;
   public itemCardImageDefaultUrl: string = environment.defaultImage;
   public itemCardProdictSizeOverviewUrl: string;
+  public itemCardSizePriceFullList: ItemCardSizePriceDto[];
   public itemCardSizePrices: ItemCardSizePriceDto[];
   public chosenColor: string = '';
   public chosenSizePrice: ItemCardSizePriceDto;
   public requestedQuantity: number = 1;
+  public isRecordEditable: boolean;
   public itemCardStates: FormDropdownDto[] = [
     { key: 0, description: "Neurčeno" },
     { key: 1, description: "V prodeji" },
@@ -38,7 +41,6 @@ export class ItemCardComponent {
     { key: 3, description: "Dočasně nedostupné" }
   ];
 
-  private pattern = /^((http|https):\/\/)/;
   private itemThumbnailImageFile: File;
   private itemCardImageFile: FileList;
   private alertOptions = {
@@ -54,7 +56,9 @@ export class ItemCardComponent {
     private basketService: BasketService) { }
 
   public initialize(itemCardId: number) {
-    this.itemCardImageMainUrl = undefined;
+    this.isRecordEditable = false;
+    this.itemCardImageSelected = new ItemCardImageDto();
+    this.itemCardImages = null;
     this.itemCard = new ItemCardDto();
     if (itemCardId > 0) {
       this.apiItemCardService.get(itemCardId).subscribe((data: ItemCardDto) => {
@@ -62,13 +66,21 @@ export class ItemCardComponent {
         if (this.itemCard.commodityIdentifier) {
           this.itemCardProdictSizeOverviewUrl = 'https://file.adler.info/pdf/size_chart/' + this.itemCard.commodityIdentifier + '---product_size.pdf';
         }
+        this.isRecordEditable = true;
         if (this.itemCard.isAdlerProduct) {
           this.apiItemCardSizePriceService.get(itemCardId).subscribe((data: ItemCardSizePriceDto[]) => {
-            this.itemCardSizePrices = data;
-            if(this.itemCardSizePrices.length > 0){
-              this.chosenSizePrice = this.itemCardSizePrices[0];
-              this.itemCard.price = this.itemCardSizePrices[0].price;
-            }
+            data.sort(function (a, b) {
+              var sizeLeft = a.sizeName.toLowerCase(), sizeRight = b.sizeName.toLowerCase();
+              if (sizeLeft < sizeRight) {
+                return -1;
+              }
+              if (sizeLeft > sizeRight) {
+                return 1;
+              }
+              return 0;
+            })
+            this.itemCardSizePriceFullList = data;
+            this.setAvailableSizes();
           },
             error => this.alertService.error("Chyba při čtení variant velikostí a cen! " + error.message, this.alertOptions));
         }
@@ -77,17 +89,19 @@ export class ItemCardComponent {
       this.apiItemCardImageService.getItemCardImages(itemCardId).subscribe((data: ItemCardImageDto[]) => {
         this.itemCardImages = data;
         if (this.itemCardImages.length > 0) {
-          if (this.pattern.test(this.itemCardImages[0].imagePath)) {
-            this.itemCardImageMainUrl = this.itemCardImages[0].imagePath;
-            if (this.itemCardImages[0].colorName.length > 0) {
-              this.chosenColor = this.itemCardImages[0].colorName;
+          this.itemCardImageSelected = this.itemCardImages[0];
+          if (GlobalConstants.urlPrefixPattern.test(this.itemCardImageSelected.imagePath)) {
+            if (this.itemCardImageSelected.colorName.length > 0) {
+              this.chosenColor = this.itemCardImageSelected.colorName;
             }
           } else {
-            this.itemCardImageMainUrl = environment.apiAjkaUrl + '/' + this.itemCardImages[0].imagePath;
+            this.itemCardImageSelected.imagePath = environment.apiAjkaUrl + '/' + this.itemCardImageSelected.imagePath;
           }
         }
       },
         error => this.alertService.error("Chyba při čtení fotografií! " + error.message, this.alertOptions));
+    } else {
+      this.isRecordEditable = true;
     }
   }
 
@@ -108,7 +122,10 @@ export class ItemCardComponent {
     } else {
       this.itemCard.categoryId = this.categoryId;
       this.itemCard.state = ItemCardState.ForSale;
-      this.apiItemCardService.insert(this.itemCard).subscribe(_success => this.alertService.success("Nový záznam je založen.", this.alertOptions),
+      this.apiItemCardService.insert(this.itemCard).subscribe(itemCardNewId => {
+        this.itemCard.id = itemCardNewId;
+        this.alertService.success("Nový záznam je založen.", this.alertOptions);
+      },
         error => this.alertService.error("Chyba při zápisu nové karty zboží!" + error.message, this.alertOptions));
     }
   }
@@ -126,7 +143,7 @@ export class ItemCardComponent {
       this.alertService.error("Nelze objednat více než " + this.itemCard.quantity + " kusů zboží!", this.alertOptions);
       return;
     }
-    this.itemCard.basketItemImagePath = this.itemCardImageMainUrl;
+    this.itemCard.basketItemImagePath = this.itemCardImageSelected.imagePath;
     var errorMessage = this.basketService.add(this.itemCard, this.requestedQuantity);
     if (errorMessage != null) {
       this.alertService.error(errorMessage, this.alertOptions);
@@ -169,7 +186,7 @@ export class ItemCardComponent {
     if (imagePath == null) {
       return false;
     }
-    if (this.pattern.test(imagePath)) {
+    if (GlobalConstants.urlPrefixPattern.test(imagePath)) {
       this.itemCardImageUrl = imagePath;
       return true;
     }
@@ -177,13 +194,14 @@ export class ItemCardComponent {
     return true;
   }
 
-  public setMainImagePath(imagePath: string, colorName: string) {
-    if (this.pattern.test(imagePath)) {
-      this.itemCardImageMainUrl = imagePath;
-      this.chosenColor = colorName;
+  public setMainImagePath(imageSelected: ItemCardImageDto) {
+    this.itemCardImageSelected = imageSelected;
+    this.setAvailableSizes();
+    if (GlobalConstants.urlPrefixPattern.test(imageSelected.imagePath)) {
+      this.chosenColor = imageSelected.colorName;
       return;
     }
-    this.itemCardImageMainUrl = environment.apiAjkaUrl + '/' + imagePath;
+    this.itemCardImageSelected.imagePath = environment.apiAjkaUrl + '/' + imageSelected.imagePath;
   }
 
   public deleteImage(itemCardImageId: number) {
@@ -195,5 +213,24 @@ export class ItemCardComponent {
     this.itemThumbnailImageFile = null;
     this.itemCard.thumbnailImageFakePath = null;
     this.alertService.success("Obrázek náhledu byl změněn.", this.alertOptions);
+  }
+
+  private setAvailableSizes() {
+    if (this.itemCardImageSelected.availableSizesList == null) {
+      this.chosenSizePrice = null;
+      return;
+    }
+    var availabilityPattern = this.itemCardImageSelected.availableSizesList.split('#');
+    var availableSizes = new Array<ItemCardSizePriceDto>();
+    this.itemCardSizePriceFullList.forEach(function (item) {
+      if (availabilityPattern.find(element => element == item.sizeName)) {
+        availableSizes.push(item);
+      }
+    });
+    this.itemCardSizePrices = availableSizes;
+    if (this.itemCardSizePrices.length > 0) {
+      this.chosenSizePrice = this.itemCardSizePrices[0];
+      this.itemCard.price = this.itemCardSizePrices[0].price;
+    }
   }
 }

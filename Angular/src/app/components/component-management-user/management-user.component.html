@@ -1,0 +1,85 @@
+<div class="container content-body-wrap">
+    <h3 class="mt-3">Správa uživatelů</h3>
+
+    <div *ngIf="!isScreenStateForm">
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col">#</th>
+                    <th scope="col">Jméno</th>
+                    <th scope="col">Příjmení</th>
+                    <th scope="col">Email</th>
+                    <th scope="col">Administrátor</th>
+                    <th scope="col">Platnost</th>
+                    <th scope="col" colspan="2" class="text-center">
+                        <button type="button" class="btn btn-success"
+                            (click)="manageRecord(0)">Nový záznam</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let userRecord of users">
+                    <td>{{ userRecord.id }}</td>
+                    <td>{{ userRecord.name }}</td>
+                    <td>{{ userRecord.surname }}</td>
+                    <td>{{ userRecord.email }}</td>
+                    <td>{{ userRecord.isAdministrator ? 'Ano' : 'Ne' }}</td>
+                    <td>{{ userRecord.isValid ? 'Ano' : 'Ne' }}</td>
+                    <td>
+                        <span class="base-button-delete-update"
+                            (click)="manageRecord(userRecord.id)">
+                            <fa-icon [icon]="['fas','edit']"></fa-icon>
+                        </span>
+                    </td>
+                    <td>
+                        <span class="base-button-delete-update" mwlConfirmationPopover [popoverTitle]="popoverTitle"
+                            [popoverMessage]="popoverMessage" placement="left" (confirm)="deleteRecord(userRecord.id)">
+                            <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div *ngIf="isScreenStateForm">
+        <div class="m-1 p-3 mt-3 content-box-shadow">
+            <form #userFormCheck="ngForm" (ngSubmit)="onSubmit()">
+                <input type="hidden" name="id" [(ngModel)]="userForm.id">
+                <div class="form-group">
+                    <label for="userName">Jméno</label>
+                    <input id="userName" type="text" class="form-control" name="name" [(ngModel)]="userForm.name">
+                </div>
+                <div class="form-group">
+                    <label for="userSurname">Příjmení</label>
+                    <input id="userSurname" type="text" class="form-control" name="surname"
+                        [(ngModel)]="userForm.surname" required>
+                </div>
+                <div class="form-group">
+                    <label for="userEmail">Email</label>
+                    <input id="userEmail" type="text" class="form-control" name="email" [(ngModel)]="userForm.email"
+                        [email]="true" required>
+                </div>
+                <div class="form-group">
+                    <label for="userPassword">Heslo</label>
+                    <input id="userPassword" type="password" class="form-control" name="password"
+                        [(ngModel)]="userForm.password">
+                </div>
+                <div class="form-check">
+                    <input id="userIsAdministrator" type="checkbox" class="form-check-input" name="isAdministrator"
+                        [(ngModel)]="userForm.isAdministrator">
+                    <label for="userIsAdministrator" class="form-check-label">Uživatel je administrátor</label>
+                </div>
+                <div class="form-check">
+                    <input id="userIsValid" type="checkbox" class="form-check-input" name="isValid"
+                        [(ngModel)]="userForm.isValid">
+                    <label for="userIsValid" class="form-check-label">Platnost</label>
+                </div>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary" type="submit"
+                        [disabled]="!userFormCheck.valid">Uložit</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

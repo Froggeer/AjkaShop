@@ -14,11 +14,25 @@ export class ApiItemCardService extends CrudExtensionService {
     super(http, '/ItemCard');
   }
 
+  public getItemCardsFilter(objectsPerPage: number, pageNumber: number): Observable<ItemCardDto[]> {
+    let postData = {
+      'objectsPerPage': objectsPerPage,
+      'pageNumber': pageNumber,
+      'orderColumn': 'Headline',
+      "isDescendingOrder": false
+    };
+    return this.http.post<ItemCardDto[]>(environment.apiAjkaUrl + '/ItemCard/filter', JSON.stringify(postData), this.httpOptions);
+  }
+
   public getItemCardsOverview(categoryId: number, isUserAdministrator: boolean): Observable<ItemCardDto[]> {
     if (isUserAdministrator) {
       return this.http.get<ItemCardDto[]>(environment.apiAjkaUrl + '/ItemCard/category-id/' + categoryId + '/administrator');
     }
     return this.http.get<ItemCardDto[]>(environment.apiAjkaUrl + '/ItemCard/category-id/' + categoryId + '/for-sale');
+  }
+
+  public getItemCardsByKeyWord(keyWord: string): Observable<ItemCardDto[]> {
+    return this.http.get<ItemCardDto[]>(environment.apiAjkaUrl + '/ItemCard/key-word/' + keyWord + '/search');
   }
 
   public uploadThumbnailImage(id: number, image: File): Observable<any> {

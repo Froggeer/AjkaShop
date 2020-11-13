@@ -3,6 +3,8 @@ import { ApiInvoiceService } from 'src/app/api-client/api-invoice.service';
 import { AlertService } from 'src/app/services/alert.service';
 import { InvoiceDto } from 'src/app/shared-dto/invoice-dto.model';
 import { FormDropdownDto } from 'src/app/shared-dto/form-dropdown-dto.model';
+import { GlobalConstants } from 'src/app/common/global-constants';
+import { retry } from 'rxjs/operators';
 
 export enum ScreenIdentifier {
   none, invoices, invoiceForm, invoiceDetail
@@ -25,13 +27,13 @@ export class ContentInvoicesComponent implements OnInit {
     { key: 2, description: "Hotově" }
   ];
 
-  public popoverTitle = 'Smazání záznamu';
-  public popoverMessage = 'Opravdu záznam odstranit?';
+  public popoverTitle = GlobalConstants.questionDeleteRecordTitle;
+  public popoverMessage = GlobalConstants.questionDeleteRecordContent;
 
   constructor(private alertService: AlertService,
     private apiInvoiceService: ApiInvoiceService) { }
 
-  ngOnInit(): void {
+  public ngOnInit(): void {
     this.getInvoices();
   }
 
@@ -47,7 +49,7 @@ export class ContentInvoicesComponent implements OnInit {
       case ScreenIdentifier.invoiceDetail:
         this.invoiceForm = new InvoiceDto();
         if (id > 0) {
-          this.apiInvoiceService.getInvoiceDetail(id).subscribe((data: InvoiceDto) => {
+          this.apiInvoiceService.getInvoiceDetail(id).pipe(retry(1)).subscribe((data: InvoiceDto) => {
             this.invoiceForm = data;
             this.invoiceForm.paymentMethodDescription = this.invoicePaymentMethods.find(method => method.key == this.invoiceForm.paymentMethod)?.description;
           },
@@ -63,7 +65,9 @@ export class ContentInvoicesComponent implements OnInit {
       this.apiInvoiceService.update(this.invoiceForm).subscribe(_success => this.setScreenIdentifierState(this.screenIdentifiers.invoices),
         error => this.alertService.error("Chyba při změně hodnot faktury! " + error.message, this.alertService.getStandardOption(true)));
     } else {
-      this.apiInvoiceService.insert(this.invoiceForm).subscribe(_success => this.setScreenIdentifierState(this.screenIdentifiers.invoiceDetail),
+      this.apiInvoiceService.insert(this.invoiceForm).subscribe((newId: number) => {
+        this.setScreenIdentifierState(this.screenIdentifiers.invoiceDetail, newId);
+      },
         error => this.alertService.error("Chyba při zápisu nové faktury! " + error.message, this.alertService.getStandardOption(true)));
     }
   }

@@ -22,7 +22,8 @@ export class ApiInvoiceService extends CrudExtensionService {
     let postData = {
       'objectsPerPage': objectsPerPage,
       'pageNumber': pageNumber,
-      'orderColumn': 'releaseDate'
+      'orderColumn': 'InvoiceNumber',
+      'isDescendingOrder': true
     };
     return this.http.post<InvoiceDto[]>(environment.apiAjkaUrl + '/Invoice/filter', JSON.stringify(postData), this.httpOptions);
   }

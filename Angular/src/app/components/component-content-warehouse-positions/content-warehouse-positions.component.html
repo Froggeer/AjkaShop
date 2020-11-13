@@ -1,0 +1,130 @@
+<div class="container content-body-wrap">
+    <div *ngIf="isOverview">
+        <h3 class="mt-3">Přehled skladových pozic</h3>
+
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a href="#" class="nav-link" (click)="setOverviewToGoods(false)">Přehled pozic</a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link" (click)="setOverviewToGoods(true)">Přehled zboží</a>
+                </li>
+            </ul>
+        </nav>
+
+        <div class="row">
+            <div class="input-group col-12 mt-3 mb-2">
+                <input #searchBoxWarehousePosition type="text" class="form-control"
+                    placeholder="Hledat podle názvu zboží nebo pozice" aria-label="Search"
+                    (keyup.enter)="search(searchBoxWarehousePosition.value)"
+                    (click)="searchBoxWarehousePosition.value = ''">
+                <div class="input-group-append">
+                    <fa-icon [icon]="['fas','search']" flip="horizontal" transform="left-30 down-5"></fa-icon>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col"></th>
+                    <th scope="col">Pozice</th>
+                    <th scope="col">Název</th>
+                    <th scope="col">Velikost</th>
+                    <th scope="col">Barva</th>
+                    <th scope="col">Množství</th>
+                    <th scope="col" colspan="2" class="text-center">
+                        <button type="button" class="btn btn-success" (click)="newRecord()">Nový záznam</button>
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let positionItem of warehousePositionItems">
+                    <td class="p-0">
+                        <div *ngIf="checkImagePath(positionItem?.itemCardImage?.imagePath)">
+                            <img [lazyLoad]="itemCardImageUrl" [defaultImage]="itemCardImageDefaultUrl"
+                                alt="{{ positionItem?.itemCard.headline }}" class="thumbnail-image-wrap pl-2">
+                        </div>
+                    </td>
+                    <td>{{ positionItem?.warehousePosition.code }}</td>
+                    <td>{{ positionItem?.itemCard.headline }}</td>
+                    <td>{{ positionItem?.itemCardSizePrice?.sizeName }}</td>
+                    <td>{{ positionItem?.itemCardImage?.colorName }}</td>
+                    <td>{{ positionItem.quantity }}</td>
+                    <td>
+                        <span *ngIf="positionItem.id > 0" class="base-button-delete-update"
+                            (click)="editRecord(positionItem)">
+                            <fa-icon [icon]="['fas','edit']"></fa-icon>
+                        </span>
+                    </td>
+                    <td>
+                        <span *ngIf="positionItem.id > 0" class="base-button-delete-update" mwlConfirmationPopover
+                            [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" placement="left"
+                            (confirm)="deletePosition(positionItem.id)">
+                            <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
+                        </span>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Form detail  -->
+
+    <div *ngIf="!isOverview">
+        <h3 class="mt-3">Detail záznamu pozice</h3>
+        <div class="m-1 p-3 mt-3 content-box-shadow">
+            <form #warehouseItemFormCheck="ngForm" (ngSubmit)="onSubmitWarehousePositionItem()">
+                <input type="hidden" name="id" [(ngModel)]="positionItemForm.id">
+                <div class="form-group">
+                    <label for="warehousePositions" class="mr-2">Skladová pozice:</label>
+                    <select id="warehousePositions" [(ngModel)]="positionItemForm.warehousePositionId"
+                        name="warehousePositionId">
+                        <option *ngFor="let warehousePositionRecord of warehousePositions"
+                            [ngValue]="warehousePositionRecord.id">
+                            {{ warehousePositionRecord.code }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemCards" class="mr-2">Karta zboží:</label>
+                    <select id="itemCards" [(ngModel)]="positionItemForm.itemCardId" name="itemCardId"
+                        (ngModelChange)="handleSelectItemCardHandler($event)">
+                        <option *ngFor="let itemCardRecord of itemCards" [ngValue]="itemCardRecord.id">
+                            {{ itemCardRecord.headline }} <span *ngIf="itemCardRecord.commodityIdentifier"> - </span>
+                            {{ itemCardRecord.commodityIdentifier }}</option>
+                    </select>
+                </div>
+                <div class="form-group" *ngIf="positionItemForm.itemCardSizePriceId != null">
+                    <label for="itemCardSizePrices" class="mr-2">Velikost:</label>
+                    <select id="itemCardSizePrices" [(ngModel)]="positionItemForm.itemCardSizePriceId"
+                        name="itemCardSizePriceId">
+                        <option *ngFor="let itemCardSizePriceRecord of itemCardSizePrices"
+                            [ngValue]="itemCardSizePriceRecord.id">
+                            {{ itemCardSizePriceRecord?.sizeName }}</option>
+                    </select>
+                </div>
+                <div class="form-group" *ngIf="positionItemForm.itemCardImageId != null">
+                    <label for="itemCardImages" class="mr-2">Barva:</label>
+                    <select id="itemCardImages" [(ngModel)]="positionItemForm.itemCardImageId" name="itemCardImageId"
+                        (ngModelChange)="handleSelectImageHandler($event)">
+                        <option *ngFor="let itemCardImageRecord of itemCardImages" [ngValue]="itemCardImageRecord.id">
+                            {{ itemCardImageRecord?.colorName ? itemCardImageRecord.colorName : 'Default' }}</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="itemQuantity">Množství</label>
+                    <input id="itemQuantity" type="number" class="form-control w-25" name="quantity"
+                        [(ngModel)]="positionItemForm.quantity" required>
+                </div>
+                <div class="mt-3">
+                    <button type="button" class="btn btn-primary" type="submit"
+                        [disabled]="!warehouseItemFormCheck.valid">Uložit</button>
+                </div>
+            </form>
+            <div *ngIf="itemCardImageSelected?.imagePath != undefined" class="mt-3">
+                <img [lazyLoad]="itemCardImageSelected.imagePath" [defaultImage]="itemCardImageSelected.imagePath"
+                    alt="Fotografie" class="img-fluid">
+            </div>
+        </div>
+    </div>
+</div>

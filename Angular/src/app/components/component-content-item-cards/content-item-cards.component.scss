@@ -8,12 +8,6 @@ $contentItemCardHeight: 220px;
     margin: 5px;
     cursor: pointer;
 
-    .headline {
-        font-size: small;
-        font-weight: bold;
-        color: black;
-    }
-
     .thumbnail-image-wrap {
         width: $contentItemCardWidth - 10px;
         height: $contentItemCardWidth - 20px;

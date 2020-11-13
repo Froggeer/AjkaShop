@@ -1,0 +1,99 @@
+<div class="container content-body-wrap">
+    <div *ngIf="isOverview">
+        <h3 class="mt-3">Přehled objednávek</h3>
+
+        <form #selectOrderState="ngForm">
+            <div class="form-group">
+                <label for="orderStateFilter" class="mr-2">Zobrazit objednávky podle stavu:</label>
+                <select #orderStateFilter id="orderStateFilter" name="selectedOrderState" [(ngModel)]="selectedState"
+                    (ngModelChange)="handleOrderSelected($event)">
+                    <option *ngFor="let stateRecord of orderStates" [ngValue]="stateRecord.key">
+                        {{ stateRecord.description }}</option>
+                </select>
+            </div>
+        </form>
+
+        <table class="table table-striped mt-3">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col">Emailová adresa</th>
+                    <th scope="col">Datum založení</th>
+                    <th scope="col">Poznámka</th>
+                    <th></th>
+                    <!-- <th colspan="2"></th> -->
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let orderRecord of orders">
+                    <td>{{ orderRecord?.customerEmail }}</td>
+                    <td>{{ orderRecord?.createDate | date:'d.M.yyyy' }}</td>
+                    <td>{{ orderRecord?.note }}</td>
+                    <td>
+                        <span *ngIf="orderRecord.id > 0" class="base-button-delete-update"
+                            (click)="editRecord(orderRecord)">
+                            <fa-icon [icon]="['fas','edit']"></fa-icon>
+                        </span>
+                    </td>
+<!--                     <td>
+                        <span *ngIf="orderRecord.id > 0" class="base-button-delete-update" mwlConfirmationPopover
+                            [popoverTitle]="popoverTitle" [popoverMessage]="popoverMessage" placement="left"
+                            (confirm)="deleteRecord(orderRecord.id)">
+                            <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
+                        </span>
+                    </td> -->
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Detail  -->
+
+    <div *ngIf="!isOverview">
+        <h3 class="mt-3 ml-2">Detail objednávky</h3>
+        <div class="m-1 p-3 mt-3 content-box-shadow">
+            <table class="table-borderless">
+                <tbody>
+                    <tr>
+                        <td>Emailová adresa:</td>
+                        <td>{{ orderDetail.customerEmail }}</td>
+                    </tr>
+                    <tr>
+                        <td>Datum založení:</td>
+                        <td>{{ orderDetail.createDate | date:'d.M.yyyy' }}</td>
+                    </tr>
+                    <tr>
+                        <td>Poznámka:</td>
+                        <td>{{ orderDetail.note }}</td>
+                    </tr>
+                </tbody>
+            </table>
+            <div class="mt-3">
+                <button type="button" class="btn btn-secondary" (click)="returnBackToOverview()">Zpět</button>
+            </div>
+        </div>
+        <table class="table table-striped m-1 mt-3">
+            <thead>
+                <tr class="table-primary">
+                    <th scope="col">Popis</th>
+                    <th scope="col">Velikost</th>
+                    <th scope="col">Barva</th>
+                    <th scope="col">Množství</th>
+                    <th scope="col">Cena/kus</th>
+                    <th scope="col" class="text-nowrap">Celkem</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let orderRecord of orderDetail.orderItems">
+                    <td>{{ orderRecord.itemCardHeadline }}</td>
+                    <td>{{ orderRecord.sizeName }}</td>
+                    <td>{{ orderRecord.colorName }}</td>
+                    <td>{{ orderRecord.orderedQuantity }}</td>
+                    <td>{{ orderRecord.itemCardSizePricePrice > 0 ? orderRecord.itemCardSizePricePrice : orderRecord.itemCardPrice }}
+                    </td>
+                    <td>{{ (orderRecord.itemCardSizePricePrice > 0 ? orderRecord.itemCardSizePricePrice : orderRecord.itemCardPrice) * orderRecord.orderedQuantity }},-
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

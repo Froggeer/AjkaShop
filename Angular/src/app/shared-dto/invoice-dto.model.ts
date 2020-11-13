@@ -9,6 +9,7 @@ export class InvoiceDto {
     public recipientCity: string;
     public recipientZipCode: string;
     public variableSymbol: string;
+    public note: string;
     public paymentMethod: InvoicePaymentMethod;
     public releaseDate: Date;
     public dueDate: Date;
@@ -16,8 +17,8 @@ export class InvoiceDto {
     public invoiceItems: InvoiceItemDto[];
 
     public paymentMethodDescription: string;
-    
-    constructor(){
+
+    constructor() {
         this.id = 0;
         this.invoiceNumber = 0;
         this.recipientName = '';
@@ -25,9 +26,11 @@ export class InvoiceDto {
         this.recipientCity = '';
         this.recipientZipCode = '';
         this.variableSymbol = '';
+        this.note = '';
         this.paymentMethod = InvoicePaymentMethod.BankTransfer;
         this.releaseDate = new Date();
-        this.dueDate = new Date();
+        // Temporary unused
+        //this.dueDate = new Date();
         this.taxablePerformanceDate = new Date();
         this.invoiceItems = [];
     }

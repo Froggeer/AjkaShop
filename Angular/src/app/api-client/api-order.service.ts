@@ -3,6 +3,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { environment } from 'src/environments/environment';
 import { BasketHeaderDto } from 'src/app/shared-dto/basket-header-dto.model';
 import { Observable } from 'rxjs';
+import { OrderDto } from '../shared-dto/order-dto.model';
 
 @Injectable({
   providedIn: 'root'
@@ -17,6 +18,10 @@ export class ApiOrderService {
 
   public createOrder(basketHeader: BasketHeaderDto): Observable<string> {
     return this.http.post<string>(environment.apiAjkaUrl + '/Order/create', JSON.stringify(basketHeader), this.httpOptions);
+  }
+
+  public getDetails(selectedState: number): Observable<OrderDto[]> {
+    return this.http.get<OrderDto[]>(environment.apiAjkaUrl + '/Order/state/' + selectedState);
   }
 }
 

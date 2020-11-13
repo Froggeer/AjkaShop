@@ -11,6 +11,7 @@ export class ItemCardDto {
     public price: number;
     public sizeList: string;
     public commodityIdentifier: string;
+    public typeList: string;
     public isAdlerProduct: boolean;
     public state: ItemCardState;
 
@@ -29,6 +30,7 @@ export class ItemCardDto {
         this.quantity = 0;
         this.price = 0;
         this.sizeList = '';
+        this.typeList = '';
         this.commodityIdentifier = '';
         this.isAdlerProduct = false;
         this.state = ItemCardState.Undefined;

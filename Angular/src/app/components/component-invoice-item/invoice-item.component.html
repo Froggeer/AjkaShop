@@ -1,4 +1,5 @@
 <form #invoiceItemFormCheck="ngForm" (ngSubmit)="onSubmitInvoiceItem()">
+    <input type="hidden" name="id" [(ngModel)]="invoiceItem.id">
     <table class="table table-striped m-1">
         <thead>
             <tr class="table-primary">
@@ -6,7 +7,7 @@
                 <th scope="col">Popis</th>
                 <th scope="col">Cena/kus</th>
                 <th scope="col">Množství</th>
-                <th scope="col" colspan="2" class="text-nowrap">Cena celkem</th>
+                <th scope="col" colspan="3" class="text-nowrap">Celkem</th>
             </tr>
         </thead>
         <tbody>
@@ -15,14 +16,28 @@
                 <td>{{ invoiceRecord.description }}</td>
                 <td>{{ invoiceRecord.pricePerPiece }}</td>
                 <td>{{ invoiceRecord.quantity > 0 ? invoiceRecord.quantity : '' }}</td>
-                <td>{{ (invoiceRecord.quantity > 0 ? invoiceRecord.quantity : 1) * invoiceRecord.pricePerPiece }}</td>
+                <td>{{ (invoiceRecord.quantity > 0 ? invoiceRecord.quantity : 1) * invoiceRecord.pricePerPiece }},-</td>
+                <td>
+                    <span class="base-button-delete-update"
+                        (click)="editInvoiceItem(invoiceRecord)">
+                        <fa-icon [icon]="['fas','edit']"></fa-icon>
+                    </span>
+                </td>
                 <td>
                     <span class="base-button-delete-update" mwlConfirmationPopover [popoverTitle]="popoverTitle"
                         [popoverMessage]="popoverMessage" placement="left"
-                        (confirm)="deleteIvoiceItem(invoiceRecord.id)">
+                        (confirm)="deleteInvoiceItem(invoiceRecord.id)">
                         <fa-icon [icon]="['fas','trash-alt']"></fa-icon>
                     </span>
                 </td>
+            </tr>
+            <tr>
+                <td></td>
+                <td class="font-weight-bold p-1 pt-2 pl-3">Celkem:</td>
+                <td></td>
+                <td class="font-weight-bold p-1 pt-2 pl-3">{{ itemsCount }}</td>
+                <td class="sum-price p-1 pl-3">{{ priceSum }},-</td>
+                <td colspan="2"></td>
             </tr>
             <tr>
                 <td>
@@ -39,9 +54,9 @@
                 <td>
                     <input type="number" class="form-control" name="quantity" [(ngModel)]="invoiceItem.quantity">
                 </td>
-                <td colspan="2">
+                <td colspan="3">
                     <button type="button" class="btn btn-primary" type="submit"
-                        [disabled]="!invoiceItemFormCheck.valid">Přidat</button>
+                        [disabled]="!invoiceItemFormCheck.valid">Odeslat</button>
                 </td>
             </tr>
         </tbody>

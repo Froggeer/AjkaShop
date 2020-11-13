@@ -45,7 +45,7 @@ export class ContentBasketComponent implements OnInit {
       item.itemCardSizePrice = null;
     });
     basketHeader.items = basketItems;
-    this.alertService.info("Objednávka je odeslána ke zpracování ...", this.alertService.getStandardOption(true));
+    this.alertService.warn("Objednávka se připravuje, nezavírejte prosím tuto stránku ...", this.alertService.getStandardOption(true));
     this.apiOrderService.createOrder(basketHeader).subscribe((successMessage: string) => {
       if (successMessage) {
         this.alertService.error("Při zakládání objednávky došlo k chybě: " + successMessage, this.alertService.getStandardOption(true));

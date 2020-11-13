@@ -1,11 +1,12 @@
 <div class="container-fluid">
     <div class="row header-top justify-content-center">
         <div class="col-12 col-sm-6 col-md-3">
-            <img src="assets/AjcinObchudekLogo.png" alt="Logo">
+            <img src="assets/AjcinObchudekLogo.png" alt="Logo" (click)="showIntroductoryInformation()" role="button">
         </div>
         <div class="col-12 col-sm-6 col-md-4">
             <div class="input-group mt-3 mb-2">
-                <input type="text" class="form-control" placeholder="Hledat v obchůdku" aria-label="Search">
+                <input #searchBox type="text" class="form-control" placeholder="Hledat v obchůdku" aria-label="Search"
+                    (keyup.enter)="search(searchBox.value)">
                 <div class="input-group-append">
                     <fa-icon [icon]="['fas','search']" flip="horizontal" transform="left-30 down-5"></fa-icon>
                 </div>
@@ -66,6 +67,22 @@
                     </span>
                     <span>Faktury</span>
                 </button>
+                <button class="btn btn-sm btn-primary mr-2" type="button" (click)="showOrders()">
+                    <span class="btn-label mr-2">
+                        <span>
+                            <fa-icon [icon]="['fas','shopping-cart']"></fa-icon>
+                        </span>
+                    </span>
+                    <span>Objednávky</span>
+                </button>
+                <button class="btn btn-sm btn-primary mr-2" type="button" (click)="showWarehousePositions()">
+                    <span class="btn-label mr-2">
+                        <span>
+                            <fa-icon [icon]="['fas','columns']"></fa-icon>
+                        </span>
+                    </span>
+                    <span>Skladové pozice</span>
+                </button>
             </div>
         </nav>
     </div>
@@ -77,7 +94,7 @@
             <div class="btn-group flex-wrap">
                 <span *ngFor="let element of categories">
                     <app-category [id]="element.id" [description]="element.description"
-                        (click)="showItemCards(element.id)"></app-category>
+                        (click)="showItemCards(element.id, '')"></app-category>
                 </span>
             </div>
         </nav>
@@ -85,7 +102,7 @@
 </div>
 
 <div class="container-fluid">
-    <div class="main-field-content">
+    <div class="main-field-content mb-3">
         <div #dynamicContent></div>
     </div>
 </div>

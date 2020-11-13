@@ -1,11 +1,16 @@
-<div class="row">
+<div class="card-group">
     <span *ngFor="let cardRecord of itemCards">
+        <!--         <div *ngIf="newCategoryCheck(cardRecord.typeList)">
+            <h3>{{ cardRecord.typeList }}</h3>
+        </div> -->
         <div class="card content-item-card-body" (click)="detail(cardRecord.id)" data-toggle="modal"
             data-target="#itemCardDetailModal" [style.background-color]="getBackgroundColorByState(cardRecord.state)">
-            <div class="card-body">
-                <div class="card-title headline">
+            <div class="card-body p-1">
+                <h6 class="card-title text-dark m-1">
                     {{ cardRecord.headline }}
-                </div>
+                </h6>
+                <h6 class="card-subtitle text-danger m-1">{{ cardRecord.isAdlerProduct ? 'Cena od ' : 'Cena ' }}
+                    {{ cardRecord.price }} {{ cardRecord.price > 0 ? 'Kč' : ''}}</h6>
             </div>
             <div *ngIf="checkImagePath(cardRecord.thumbnailImagePath)" class="thumbnail-image-wrap pl-1">
                 <img [lazyLoad]="itemCardImageUrl" [defaultImage]="itemCardImageDefaultUrl"
